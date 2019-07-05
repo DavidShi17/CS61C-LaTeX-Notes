@@ -1,0 +1,114 @@
+\documentclass[letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+
+\usepackage{afterpage}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\usepackage{verse}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+\usepackage{epstopdf}
+\usepackage{circuitikz}
+\usepackage[separate-uncertainty = true,multi-part-units=single]{siunitx}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[toc,page]{appendix}
+\usepackage{color}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage[round]{natbib}   % omit 'round' option if you prefer square brackets
+\usepackage{titling}
+\usepackage{siunitx}
+
+\usepackage{setspace}
+% \doublespacing
+\usepackage{float}
+
+\pgfplotsset{compat=1.14}
+
+
+\usepackage{fancyhdr}
+
+\pgfplotscreateplotcyclelist{grayscale}{
+    thick,white!10!black,mark=x,mark options=solid, dashed\\%
+    thick,white!20!black,mark=o,mark options=solid\\%
+}
+
+
+\newcommand{\answer}[1]{\framebox{$\displaystyle #1 $}}
+
+ 
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{David Shi}
+\lhead{CS61C}
+\cfoot{\thepage}
+
+\title{Lecture 6 - Notes}
+\author{David Shi}
+\date{July 2019}
+\begin{document}
+
+\maketitle
+
+\section{Overview}
+Last lecture introduced assembly languages, namely RISC-V, the assembly language that this class will focus on. This note will be a shorter one as this lecture was mostly practicing RISC-V instructions and showcasing demos of RISC-V instruction sets.
+
+\section{Sign Extension Practice Problem}
+The lecture had an example question on how to perform sign extension on a two's complement number in RISC-V instructions. Review the lecture slides for this question (slides 4-14)
+
+https://drive.google.com/file/d/1-ToVwIm0rtc34sDlib8WEg4TTfgriQko/view
+
+
+\section{Pseudo-Instructions}
+When the assembly code is written for a program, program instructions match architecture operations. However, this code is often difficult to read for the programmer. It is helpful to have additional instructions that makes the assembly more readable despite not really being performed by the hardware.
+
+The green reference sheet has a list of RISC-V pseudo-instructions.
+
+\section{C to RISC-V practice questions}
+The lecture had some practice on translation C code to RISC-V assembly code. Review slides 20-27 of the lecture slides for this practice.
+
+\section{Function Calls in Assembly}
+The following is a list of steps assembly does to perform a function call from C:
+\begin{enumerate}
+    \item Put arguments in a place where the function can access them
+    \item Transfer control to the function
+    \item The Function acquires any local storage resources needed
+    \item Function performs the task
+    \item Function puts return value in an accessible place and cleans up
+    \item Control returned
+\end{enumerate}
+
+Numbers 1 and 5 use registers a0-a1 for return values, and a0-a7 for parameters. sp refers to the stack pointer from our discussion on memory in lecture 4. Numbers 2 and 6 are performed with transfer control instructions jump (j) type. These operations jump to a certain label in the code, similar to a function call in high level languages.
+
+\section{Function Calling Conventions}
+To avoid future confusion with various conventions used when talking about function calls, we will specify our conventions here.
+
+A Calle\textbf{R} is the function that calls another function. A Calle\textbf{E} is the function that is called by a Caller.
+
+Saved Registers are expected to be the same before and after function calls. If used by a Callee, the saved register's values must be restored before returning. These saved registers are named s0-s11 (saved registers), but also sp (stack pointer) and ra (return address).
+
+Volatile Registers can be freely changed by a callee unlike saved registers. These are typically the temporary registers t0-t6, as well as return addresses and arguments a0-a7.
+
+All registers is one of two types: Caller saved or Callee saved. Caller saved means Callee functions can freely change them. Callee saved means values must be restored before returning. These conventions are on our Green Reference Sheet in the rightmost column.
+
+\end{document}
+
